@@ -1,0 +1,10 @@
+{
+  "name": "test-pill-api",
+  "version": "1.0.0",
+  "description": "API - Test to apply for a full stack developer position at Pill",
+  "main": "app.js",
+  "repository": "https://github.com/leobaiano/test-pill",
+  "author": "Leo Baiano",
+  "license": "GPLv3",
+  "private": true
+}
