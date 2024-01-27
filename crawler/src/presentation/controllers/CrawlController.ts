@@ -8,7 +8,7 @@ class CrawlController {
             const url = req.query.url as string;
             const html = await this.fetchHTML(url);
 
-            const name = this.getValueFromHTMLTag(html, '.product-name h1');
+            const name = this.getValueFromHTMLTag(html, '.product-name h1')?.replace('...', '');
             const barCode = this.getBarCode(html);
             const brand = this.getValueFromHTMLTag(html, '.brand');
             const image = this.getImage(html);
@@ -40,23 +40,9 @@ class CrawlController {
 
         await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-        await page.waitForSelector('.price-final', { timeout: 10000 });
-        await page.waitForSelector('.v_interactions__avatar--image', { timeout: 80000 });
-
-        const style = await page.evaluate(() => {
-            const imageElement = document.querySelector('.v_interactions__avatar--image');
-            return imageElement ? window.getComputedStyle(imageElement).cssText : 'teste';
-        });
-
-        console.log('teste', style);
-
+        await page.waitForSelector('.price-final', { timeout: 50000 });
+        
         const dynamicContent = await page.content();
-
-        if (dynamicContent.includes('v_interactions__avatar--image')) {
-            console.log('ok');
-        } else {
-            console.log('no')
-        }
 
         await browser.close();
 
@@ -111,11 +97,21 @@ class CrawlController {
     // Get image
     private getImage(html: string): string | null {
         const $ = cheerio.load(html);
+        let clearImageUrl = '';
+        let encodedImageUrl = '';
+        let imageUrl = '';
         
-        const imageElement = $('.v_interactions__avatar--image').attr('style');
-        console.log(imageElement);
+        const unprocessedImageUrl = $('.swiper-lazy').attr('src') ? $('.swiper-lazy').attr('src') : '';
+        
+        if (unprocessedImageUrl) {
+            clearImageUrl = unprocessedImageUrl.replace("/_next/image?url=", "");
+            encodedImageUrl = decodeURIComponent(clearImageUrl);
+            imageUrl = encodedImageUrl.split('?')[0];
+        }
+
+        console.log(imageUrl);
     
-        return imageElement || null;
+        return imageUrl || null;
     }
 
     // Send response
