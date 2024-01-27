@@ -6,7 +6,6 @@ const app = express();
 
 app.use(bodyParser.json());
 
-// Roteamento
 app.use('/api', CrawlRoutes);
 
 export default app;

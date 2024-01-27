@@ -1,13 +1,9 @@
 import express, { Request, Response } from 'express';
+import CrawlController from '../controllers/CrawlController';
 
 const router = express.Router();
+const crawlController = new CrawlController();
 
-router.get('/crawl', (req: Request, res: Response) => {
-  // Aqui você pode adicionar a lógica para processar a solicitação, se necessário
-  const data = { "teste": "teste" };
-  
-  // Envie o objeto JSON como resposta
-  res.json(data);
-});
+router.get('/drogasil', crawlController.crawlHandler.bind(crawlController));
 
 export default router;
