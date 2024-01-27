@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import CrawlController from '../controllers/CrawlController';
+import DrogasilController from '../controllers/DrogasilController';
 
 const router = express.Router();
-const crawlController = new CrawlController();
+const drogasilController = new DrogasilController();
 
-router.get('/drogasil', crawlController.crawlHandler.bind(crawlController));
+router.get('/drogasil', drogasilController.drogasilHandler.bind(drogasilController));
 
 export default router;
