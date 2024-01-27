@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import CrawlController from '../controllers/CrawlController';
 import DrogasilController from '../controllers/DrogasilController';
 
 const router = express.Router();
