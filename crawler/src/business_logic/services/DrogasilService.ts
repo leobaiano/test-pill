@@ -6,7 +6,7 @@ import ProductRepository from '../../data_access/repositories/ProductRepository'
 
 class DrogasilService extends CrawlService {
 
-    public async getProduct(url: string): Promise<Product | null> {
+    public async getProduct(url: string): Promise<Product> {
         let product: Product;
 
         try {
@@ -29,6 +29,7 @@ class DrogasilService extends CrawlService {
     }
 
     public async fetchDataFromDatabase(url: string): Promise<Product | null> {
+
         try {
             const product = await ProductRepository.findOne({ where: { url } });
 
@@ -119,6 +120,7 @@ class DrogasilService extends CrawlService {
                 url: product.url,
                 name: product.name,
                 barcode: product.barCode,
+                brand: product.brand,
                 image: product.image,
                 price: product.price,
                 status: 1

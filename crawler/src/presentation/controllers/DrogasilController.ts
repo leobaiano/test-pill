@@ -12,7 +12,7 @@ class DrogasilController {
     async drogasilHandler(req: Request, res: Response) {
         try {
             const url = req.query.url as string;
-            const product: Product = await this.drogasilService.fetcDynamichHTML(url);
+            const product: Product = await this.drogasilService.getProduct(url);
 
             this.drogasilService.sendResponse(res, product);
         } catch (error) {
