@@ -40,7 +40,11 @@ class DrogasilService extends CrawlService {
     }
 
     public async fetcDynamichHTML(url: string): Promise<Product> {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: true,
+            executablePath: process.env.CHROME_BIN,
+            args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
+        });
         const page = await browser.newPage();
 
         await page.goto(url, { waitUntil: 'domcontentloaded' });
