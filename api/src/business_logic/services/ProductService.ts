@@ -1,10 +1,10 @@
 import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
-import CrawlService from './CrawlService';
-import { Product } from '../../business_logic/models/CrawledData';
+import { Product } from '../models/ProductModel';
 import ProductRepository from '../../data_access/repositories/ProductRepository';
+import { Response } from 'express';
 
-class DrogasilService extends CrawlService {
+class ProductService{
 
     public async getProduct(url: string): Promise<Product> {
         let product: Product;
@@ -15,7 +15,7 @@ class DrogasilService extends CrawlService {
             if (databaseResult) {
                 product = databaseResult;
             } else {
-                product = await this.fetcDynamichHTML(url);
+                product = await this.fetchDynamichHTML(url);
 
                 await this.addProductToDatabase(product);
             }
@@ -40,7 +40,7 @@ class DrogasilService extends CrawlService {
         }
     }
 
-    public async fetcDynamichHTML(url: string): Promise<Product> {
+    public async fetchDynamichHTML(url: string): Promise<Product> {
         const browser = await puppeteer.launch({
             headless: true,
             executablePath: process.env.CHROME_BIN,
@@ -131,6 +131,30 @@ class DrogasilService extends CrawlService {
             throw error;
         }
     }
+
+    // Get value from an html tag
+    public getValueFromHTMLTag(html: string, tag: string): string | null {
+        const $ = cheerio.load(html);
+        let content = $(tag).text();
+
+        if (!content) {
+            const fullPath = `.${tag.split(' ').join(' .')}`;
+            content = $(fullPath).text();
+        }
+
+        return content || null;
+    }
+
+    public sendResponse(res: Response, product: Product) {
+
+        delete product.id;
+        delete product.url;
+        delete product.updatedAt;
+        delete product.createdAt;
+        delete product.status;
+
+        res.json({ data: product });
+    }
 }
 
-export default DrogasilService;
+export default ProductService;

@@ -26,24 +26,6 @@ services:
     volumes:
       - ./api:/app
 
-  crawler:
-    build:
-      context: ./crawler
-    ports:
-      - "8000:8000"
-    environment:
-      NODE_ENV: development
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: root
-      MYSQL_PASSWORD: mysecretpassword
-      MYSQL_DATABASE: test_pill
-    depends_on:
-      - backend
-      - mysql
-    volumes:
-      - ./crawler:/app
-
   mysql:
     image: mysql:latest
     environment:
