@@ -3,7 +3,7 @@ import React from 'react';
 interface ProductInfosProps {
     name: string;
     barcode: string;
-    price: number;
+    price: string | number;
 }
 
 const ProductInfos: React.FC<ProductInfosProps> = ({ name, barcode, price }) => {

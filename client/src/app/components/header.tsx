@@ -9,7 +9,7 @@ const Header: React.FC = () => {
                 <Image
                     src="/images/pill-farmacia-digital.svg"
                     alt="Logo da Pill Farmácia Digital"
-                    className=""
+                    className="logo"
                     priority
                     width={100}
                     height={0}

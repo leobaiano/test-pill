@@ -6,7 +6,7 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'product-data.raiadrogasil.io',
                 port: '',
-                pathname: ''
+                pathname: '**'
             }
         ]
     }
