@@ -35,3 +35,8 @@ Se tudo correu bem você já pode acessar o cliente, lembrando que é necessári
 
 Uma parte importante deste projeto é a API, para conhecer melhor sobre suas rotas, como realizar requisições e quais retornos [acesse a documentaçãoo da API](api/README.md).
 
+## Desenvolvimento
+
+### API
+
+### Client
