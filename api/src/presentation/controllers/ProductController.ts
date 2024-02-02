@@ -7,6 +7,17 @@ class ProductController {
         try {
             const productService: ProductService = new ProductService();
             const url = req.query.url as string;
+
+            // Verifica se recebeu uma URL
+            if (!url) {
+                return res.status(500).json({ message: 'É preciso informar a URL.' });
+            }
+
+            // Verifica se o dominio é permitido
+            if (!productService.isDomainAllowed(url)) {
+                return res.status(500).json({ message: 'Não é permitido consultar informações no dominio informado.' });
+            }
+
             const product: Product = await productService.getProduct(url);
 
             productService.sendResponse(res, product);

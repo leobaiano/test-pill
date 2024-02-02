@@ -3,8 +3,9 @@ import puppeteer from 'puppeteer';
 import { Product } from '../models/ProductModel';
 import ProductRepository from '../../data_access/repositories/ProductRepository';
 import { Response } from 'express';
+import { Domains, AllowedDomains } from '../models/DomainsModel';
 
-class ProductService{
+class ProductService {
 
     public async getProduct(url: string): Promise<Product> {
         let product: Product;
@@ -154,6 +155,19 @@ class ProductService{
         delete product.status;
 
         res.json({ data: product });
+    }
+
+    public isDomainAllowed(url: string): boolean {
+        try {
+            const parsedUrl = new URL(url);
+            const hostname = parsedUrl.hostname;
+            const allowedDomains: Domains = AllowedDomains;
+    
+            return allowedDomains.some((allowedDomain) => hostname.endsWith(allowedDomain));
+        } catch (error) {
+            console.error('Erro ao analisar a URL:', error);
+            return false;
+        }
     }
 }
 
