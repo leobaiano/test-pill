@@ -25,16 +25,21 @@ export default function Home() {
 		const urlParamValue = urlParams.get('url');
 
 		if (urlParamValue) {
+			console.log('tem url');
+			setError('tem url');
 			fetch(`http://localhost:7000/api/product?url=${urlParamValue}`)
 				.then((res) => res.json())
 				.then((response) => {
+					console.log('entrou no then');
+					setError('entrou no then');
 					setProduct(response.data);
 				})
 				.catch((error) => {
-					console.log("teste")
-					setError(error.message);
+					console.log('Caiu no catch');
+					setError('Caiu no catch');
 				});
 		} else {
+			console.log('caiu no else')
 			setError('É preciso informar a URL');
 		}
 	}, []);

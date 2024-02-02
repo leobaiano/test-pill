@@ -42,39 +42,65 @@ class ProductService {
     }
 
     public async fetchDynamichHTML(url: string): Promise<Product> {
-        const browser = await puppeteer.launch({
-            headless: true,
-            executablePath: process.env.CHROME_BIN,
-            args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
-        });
-        const page = await browser.newPage();
-
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
-
-        await page.waitForSelector('.price-final', { timeout: 50000 });
-
-        const dynamicContent = await page.content();
-
-        const name = this.getValueFromHTMLTag(dynamicContent, '.product-name h1')?.replace('...', '') as string;
-        const barCode = this.getBarCode(dynamicContent) as string;
-        const brand = this.getValueFromHTMLTag(dynamicContent, '.brand') as string;
-        const image = this.getImage(dynamicContent) as string;
-        const allPricesInPage = this.getValueFromHTMLTag(dynamicContent, '.price-final');
-        const price = this.getPrice(allPricesInPage);
-
-        const product: Product = {
-            url,
-            name,
-            barCode,
-            brand,
-            image,
-            price
+        try {
+            const browser = await puppeteer.launch({
+                headless: true,
+                executablePath: process.env.CHROME_BIN,
+                args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage']
+            });
+            const page = await browser.newPage();
+    
+            await page.goto(url, { waitUntil: 'domcontentloaded' });
+    
+            const isNotFound = await page.evaluate(() => {
+                const h1Elements = document.querySelectorAll('h1');
+                for (const element of h1Elements) {
+                    if (element.textContent?.includes("Não encontramos o que você procurava.")) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+    
+            if (isNotFound) {
+                await browser.close();
+                throw { message: 'Produto não encontrado.', status: 404 } as CustomError;
+            }
+    
+            await page.waitForSelector('.price-final', { timeout: 150000 });
+    
+            const dynamicContent = await page.content();
+    
+            const name = this.getValueFromHTMLTag(dynamicContent, '.product-name h1')?.replace('...', '') as string;
+            const barCode = this.getBarCode(dynamicContent) as string;
+            const brand = this.getValueFromHTMLTag(dynamicContent, '.brand') as string;
+            const image = this.getImage(dynamicContent) as string;
+            const allPricesInPage = this.getValueFromHTMLTag(dynamicContent, '.price-final');
+            const price = this.getPrice(allPricesInPage);
+    
+            const product: Product = {
+                url,
+                name,
+                barCode,
+                brand,
+                image,
+                price
+            }
+    
+            await browser.close();
+    
+            return product;
+        } catch (error) {
+            console.error('[CrawlService] Error fetching dynamic HTML:', error);
+            throw error;
         }
-
-        await browser.close();
-
-        return product;
     }
+    
+    public isTimeoutError(error: any): error is { name: string } {
+        console.log(error.name);
+        return error && error.name === 'TimeoutError';
+    }
+    
 
     public getPrice(price: string | null): number {
         const matches = price ? price.match(/R\$(\d+,\d+)/) : 0;
@@ -168,6 +194,16 @@ class ProductService {
             console.error('Erro ao analisar a URL:', error);
             return false;
         }
+    }
+}
+
+class CustomError {
+    message: string;
+    status: number;
+
+    constructor(message: string, status: number) {
+        this.message = message;
+        this.status = status;
     }
 }
 

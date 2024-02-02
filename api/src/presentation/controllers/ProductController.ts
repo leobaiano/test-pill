@@ -10,12 +10,12 @@ class ProductController {
 
             // Verifica se recebeu uma URL
             if (!url) {
-                return res.status(500).json({ message: 'É preciso informar a URL.' });
+                return res.status(500).json({ error: {message: 'É preciso informar a URL.' }});
             }
 
             // Verifica se o dominio é permitido
             if (!productService.isDomainAllowed(url)) {
-                return res.status(500).json({ message: 'Não é permitido consultar informações no dominio informado.' });
+                return res.status(500).json({ error: {message: 'Não é permitido consultar informações no dominio informado.' }});
             }
 
             const product: Product = await productService.getProduct(url);
