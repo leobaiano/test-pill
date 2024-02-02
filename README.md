@@ -20,12 +20,12 @@ Na raiz do projeto você deve encontrar um diretório chamado scripts com 3 arqu
 
 **Importante:** Os scripts devem ser executados na ordem correta.
 
-**Dados para conexão com o banco** 
-MYSQL_HOST: localhost 
-MYSQL_PORT: 3306 
-MYSQL_USER: root 
-MYSQL_PASSWORD: mysecretpassword 
-MYSQL_DATABASE: test_pill 
+**Dados para conexão com o banco**  
+MYSQL_HOST: localhost  
+MYSQL_PORT: 3306  
+MYSQL_USER: root  
+MYSQL_PASSWORD: mysecretpassword  
+MYSQL_DATABASE: test_pill  
 
 Obs.: Se tiver problemas talvez seja necessário utilizar o nome do serviço ao invés de localhost, tente mudar para `mysql`.
 
